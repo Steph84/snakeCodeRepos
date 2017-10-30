@@ -2,12 +2,31 @@
 
 # raw_input() reads a string with a line of input, stripping the '\n' (newline) at the end.
 # This is all you need for most Code Jam problems.
-f = open('A-small-practice.in', 'r')
-caseNumber = (int)f.readline()
 
-for i in xrange(1, caseNumber + 1):
-    queriesNumber = int(raw_input())
-    for j in xrange(1, queriesNumber + 1):
-        query = raw_input()  # read a list of integers, 2 in this case
-        print "Case #{}: query #{} {}".format(i, j, query)
-# check out .format's specification for more formatting options
+myList = []
+yoshi = []
+
+with open("A-small-practice.in") as fp:
+    for i, line in enumerate(fp):
+        myList.append((line))
+        if line.isdigit():
+            print "fuck"
+
+print myList.__len__()
+caseNumber = int(myList[0])
+print caseNumber
+for x in myList:
+    x.split('\n')
+    if x.isdigit():
+        print x
+
+#caseNumber = int(line)
+#pass
+#queriesNumber = int(line)
+#for j in range(i, i+queriesNumber):
+#    print line
+
+
+
+
+
