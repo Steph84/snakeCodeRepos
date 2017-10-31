@@ -1,32 +1,31 @@
-# A-small-practice.in
 
-# raw_input() reads a string with a line of input, stripping the '\n' (newline) at the end.
-# This is all you need for most Code Jam problems.
-
-myList = []
-yoshi = []
+SortedData = []
+tempList = []
 
 with open("A-small-practice.in") as fp:
     for i, line in enumerate(fp):
-        myList.append((line))
-        if line.isdigit():
-            print "fuck"
+        line = line.rstrip() #remove \n
+        if i == 0:
+            caseNumber = line
+        else:
+            if not line.isdigit(): # if a string, store into a temporary list
+                tempList.append((line))
+            if line.isdigit() and i != 1 : # if a number, store the temporary list into the SortedData and RAZ tempList
+                SortedData.append(tempList)
+                tempList = []
+SortedData.append(tempList) # to save the last list
 
-print myList.__len__()
-caseNumber = int(myList[0])
-print caseNumber
-for x in myList:
-    x.split('\n')
-    if x.isdigit():
-        print x
-
-#caseNumber = int(line)
-#pass
-#queriesNumber = int(line)
-#for j in range(i, i+queriesNumber):
-#    print line
+print SortedData.__len__()
 
 
+# listSearchEngines = SortedData[0]
+# listQueries = SortedData[1]
+# if listQueries.__len__() == 0:
+#     print "Case #", 1, ":", 0
 
+listSearchEngines = SortedData[2]
+listQueries = SortedData[3]
+
+# comparer les 2 listes, s il n y en a pas en commun, choisir celui la
 
 
