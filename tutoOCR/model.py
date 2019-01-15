@@ -25,6 +25,32 @@ class Position:
         return self.latitude_degrees * math.pi / 180
 
 
+class Zone:
+    # attribut de classe
+    ZONE = []
+    MIN_LONGITUDE_DEGREES = -180
+    MAX_LONGITUDE_DEGREES = 180
+    MIN_LATITUDE_DEGREES = -90
+    MAX_LATITUDE_DEGREES = 90
+    WIDTH_DEGREES = 1
+    HEIGHT_DEGREES = 1
+
+    def __init__(self, corner1, corner2):
+        self.corner1 = corner1
+        self.corner2 = corner2
+        self.inhabitants = 0
+
+    @classmethod # niveau classe et non plus instance = méthode static
+    def initialize_zones(cls):
+        for latitude in range(cls.MIN_LATITUDE_DEGREES, cls.MAX_LATITUDE_DEGREES, cls.HEIGHT_DEGREES):
+            for longitude in range(cls.MIN_LONGITUDE_DEGREES, cls.MAX_LONGITUDE_DEGREES, cls.WIDTH_DEGREES):
+                bottom_left_corner = Position(longitude, latitude)
+                top_right_corner = Position(longitude + cls.WIDTH_DEGREES, latitude + cls.HEIGHT_DEGREES)
+                zone = Zone(bottom_left_corner, top_right_corner)
+                cls.ZONE.append(zone)
+        print(len(cls.ZONE))
+
+
 def main():
     for agent_attributes in json.load(open("agents-100k.json")):
         # pop because the value have to be in Position but not in Agent
@@ -32,7 +58,7 @@ def main():
         longitude = agent_attributes.pop('longitude')
         position = Position(longitude, latitude)
         agent = Agent(position, **agent_attributes)
-        print(agent.position.longitude)
+        Zone.initialize_zones()
 
 
 agent_attributes = {"neuroticism": -0.0739192627121713, "language": "Shona", "latitude": -19.922097800281783, "country_tld": "zw", "age": 12, "income": 333, "longitude": 29.798455535838603, "sex": "Male", "religion": "syncretic", "extraversion": 1.051833688742943, "date_of_birth": "2005-01-10", "agreeableness": 0.1441229877537559, "id_str": "LB3-3Cl", "conscientiousness": 0.2419104411765549, "internet": 'false', "country_name": "Zimbabwe", "openness": -0.024607605122172617, "id": 6636726630}
