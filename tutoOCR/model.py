@@ -48,7 +48,7 @@ class Zone:
         return len(self.inhabitants)
 
     @classmethod # niveau classe et non plus instance = méthode static
-    def initialize_zones(cls):
+    def _initialize_zones(cls):
         for latitude in range(cls.MIN_LATITUDE_DEGREES, cls.MAX_LATITUDE_DEGREES, cls.HEIGHT_DEGREES):
             for longitude in range(cls.MIN_LONGITUDE_DEGREES, cls.MAX_LONGITUDE_DEGREES, cls.WIDTH_DEGREES):
                 bottom_left_corner = Position(longitude, latitude)
@@ -65,6 +65,8 @@ class Zone:
     @classmethod
     def find_zone_that_contains(cls, position):
         # compute the index in the ZONE array that contains the given position
+        if not cls.ZONE:
+            cls._initialize_zones()
         longitude_index = int((position.longitude_degrees - cls.MIN_LONGITUDE_DEGREES)/cls.WIDTH_DEGREES)
         latitude_index = int((position.latitude_degrees - cls.MIN_LATITUDE_DEGREES)/cls.HEIGHT_DEGREES)
         longitude_bins = int((cls.MAX_LONGITUDE_DEGREES - cls.MIN_LONGITUDE_DEGREES)/cls.WIDTH_DEGREES) # 180 - (-180) / 1
@@ -78,7 +80,6 @@ class Zone:
 
 
 def main():
-    Zone.initialize_zones()
     for agent_attributes in json.load(open("agents-100k.json")):
         # pop because the value have to be in Position but not in Agent
         latitude = agent_attributes.pop('latitude')
