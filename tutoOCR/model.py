@@ -1,5 +1,7 @@
 import json
 import math
+import matplotlib.pyplot as plt
+
 
 class Agent:
     def say_hello(self, first_name):
@@ -60,6 +62,9 @@ class Zone:
     def area(self):
         return self.height * self.width
 
+    def population_density(self):
+        return self.population/self.area
+
     @classmethod # niveau classe et non plus instance = méthode static
     def _initialize_zones(cls):
         for latitude in range(cls.MIN_LATITUDE_DEGREES, cls.MAX_LATITUDE_DEGREES, cls.HEIGHT_DEGREES):
@@ -101,6 +106,41 @@ class Zone:
         return sum([inhabitant.agreeableness for inhabitant in self.inhabitants])/self.population
 
 
+class BaseGraph:
+
+    def __init__(self):
+        self.title = "graph"
+        self.x_label = "x label"
+        self.y_label = "y_label"
+        self.show_grid = True
+
+    def show(self, zones):
+        x_values, y_values = self.xy_values(zones)
+        plt.plot(x_values, y_values, '.')
+        plt.xlabel(self.x_label)
+        plt.ylabel(self.y_label)
+        plt.title(self.title)
+        plt.grid(self.show_grid)
+        plt.show()
+
+    def xy_values(self, zones):
+        raise NotImplementedError
+
+
+class AgreeablenessGraph(BaseGraph): # inherit of BaseGraph
+
+    def __init__(self):
+        super().__init__() # launch the init of the parent class
+        self.title = "nice people live in the countryside"
+        self.x_label = "population density"
+        self.y_label = "agreeableness"
+
+    def xy_values(self, zones):
+        x_values = [zone.population_density() for zone in zones]
+        y_values = [zone.average_agreeableness() for zone in zones]
+        return x_values, y_values
+
+
 def main():
     for agent_attributes in json.load(open("agents-100k.json")):
         # pop because the value have to be in Position but not in Agent
@@ -110,9 +150,11 @@ def main():
         agent = Agent(position, **agent_attributes)
         zone = Zone.find_zone_that_contains(position)
         zone.add_inhabitant(agent)
-        print(zone.average_agreeableness())
+        #print(zone.average_agreeableness())
 
+    agreeableness_graph = AgreeablenessGraph()
+    agreeableness_graph.show(Zone.ZONE)
 
-agent_attributes = {"neuroticism": -0.0739192627121713, "language": "Shona", "latitude": -19.922097800281783, "country_tld": "zw", "age": 12, "income": 333, "longitude": 29.798455535838603, "sex": "Male", "religion": "syncretic", "extraversion": 1.051833688742943, "date_of_birth": "2005-01-10", "agreeableness": 0.1441229877537559, "id_str": "LB3-3Cl", "conscientiousness": 0.2419104411765549, "internet": 'false', "country_name": "Zimbabwe", "openness": -0.024607605122172617, "id": 6636726630}
+#agent_attributes = {"neuroticism": -0.0739192627121713, "language": "Shona", "latitude": -19.922097800281783, "country_tld": "zw", "age": 12, "income": 333, "longitude": 29.798455535838603, "sex": "Male", "religion": "syncretic", "extraversion": 1.051833688742943, "date_of_birth": "2005-01-10", "agreeableness": 0.1441229877537559, "id_str": "LB3-3Cl", "conscientiousness": 0.2419104411765549, "internet": 'false', "country_name": "Zimbabwe", "openness": -0.024607605122172617, "id": 6636726630}
 
 main()
