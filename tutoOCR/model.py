@@ -34,6 +34,7 @@ class Zone:
     MAX_LATITUDE_DEGREES = 90
     WIDTH_DEGREES = 1
     HEIGHT_DEGREES = 1
+    EARTH_RADIUS_KILOMETERS = 6371
 
     def __init__(self, corner1, corner2):
         self.corner1 = corner1
@@ -46,6 +47,18 @@ class Zone:
     @property # car donne une info mais ne fait pas d'action
     def population(self):
         return len(self.inhabitants)
+
+    @property
+    def width(self):
+        return abs(self.corner1.longitude - self.corner2.longitude) * self.EARTH_RADIUS_KILOMETERS
+
+    @property
+    def height(self):
+        return abs(self.corner1.latitude - self.corner2.latitude) * self.EARTH_RADIUS_KILOMETERS
+
+    @property
+    def area(self):
+        return self.height * self.width
 
     @classmethod # niveau classe et non plus instance = méthode static
     def _initialize_zones(cls):
@@ -78,6 +91,15 @@ class Zone:
 
         return zone
 
+    def average_agreeableness(self):
+        if not self.inhabitants:
+            return 0
+        #agreeableness = []
+        #for inhabitant in self.inhabitants:
+        #agreeableness.append(inhabitant.agreeableness)
+        #return sum(agreeableness) / self.population
+        return sum([inhabitant.agreeableness for inhabitant in self.inhabitants])/self.population
+
 
 def main():
     for agent_attributes in json.load(open("agents-100k.json")):
@@ -88,7 +110,7 @@ def main():
         agent = Agent(position, **agent_attributes)
         zone = Zone.find_zone_that_contains(position)
         zone.add_inhabitant(agent)
-        print(zone.population)
+        print(zone.average_agreeableness())
 
 
 agent_attributes = {"neuroticism": -0.0739192627121713, "language": "Shona", "latitude": -19.922097800281783, "country_tld": "zw", "age": 12, "income": 333, "longitude": 29.798455535838603, "sex": "Male", "religion": "syncretic", "extraversion": 1.051833688742943, "date_of_birth": "2005-01-10", "agreeableness": 0.1441229877537559, "id_str": "LB3-3Cl", "conscientiousness": 0.2419104411765549, "internet": 'false', "country_name": "Zimbabwe", "openness": -0.024607605122172617, "id": 6636726630}
