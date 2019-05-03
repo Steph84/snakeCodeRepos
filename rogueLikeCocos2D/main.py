@@ -5,8 +5,8 @@ from pyglet.window import key
 class Mover(cocos.actions.Move):
     def step(self, dt):
         super(Mover, self).step(dt)
-        vel_x = (keyboard[key.RIGHT] - Main.keyboard[key.LEFT]) * 500
-        vel_y = (Main.keyboard[key.UP] - Main.keyboard[key.DOWN]) * 500
+        vel_x = (keyboard[key.RIGHT] - keyboard[key.LEFT]) * 500
+        vel_y = (keyboard[key.UP] - keyboard[key.DOWN]) * 500
         self.target.velocity = (vel_x, vel_y)
 
 class Hero(cocos.layer.Layer):
@@ -18,18 +18,30 @@ class Hero(cocos.layer.Layer):
         spr.do(Mover())
         self.add(spr)
 
-class Main:
-    def __init__(self):
-        director.init(caption="RogueOne", autoscale=True, fullscreen=False)
+# class Main:
+#     def __init__(self):
+#         director.init(caption="RogueOne", autoscale=True, fullscreen=False)
 
-        self.keyboard = key.KeyStateHandler()
-        director.window.push_handlers(self.keyboard)
+#         self.keyboard = key.KeyStateHandler()
+#         director.window.push_handlers(self.keyboard)
 
-        window_size = director.get_window_size()
-        my_hero = Hero(window_size)
-        my_scene = cocos.scene.Scene(my_hero)
+#         window_size = director.get_window_size()
+#         my_hero = Hero(window_size)
+#         my_scene = cocos.scene.Scene(my_hero)
 
-        director.run(my_scene)
+#         director.run(my_scene)
+
+# if __name__ == "__main__":
+#     Main()
 
 if __name__ == "__main__":
-    Main()
+    director.init(caption="RogueOne", autoscale=True, fullscreen=False)
+
+    keyboard = key.KeyStateHandler()
+    director.window.push_handlers(keyboard)
+
+    window_size = director.get_window_size()
+    my_hero = Hero(window_size)
+    my_scene = cocos.scene.Scene(my_hero)
+
+    director.run(my_scene)
